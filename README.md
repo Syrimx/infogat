@@ -1,9 +1,7 @@
 # infogat
-   _      ___               __ 
-  (_)__  / _/__  ___ ____ _/ /_
- / / _ \/ _/ _ \/ _ `/ _ `/ __/
-/_/_//_/_/ \___/\_, /\_,_/\__/ 
-               /___/           
+
+![grafik](https://github.com/user-attachments/assets/0388792b-778e-412d-8357-2360336bbeb7)
+
 
 echo "[*] build by ely sylvain schybol"
 
