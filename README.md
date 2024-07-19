@@ -1,6 +1,6 @@
 # infogat
 
-![grafik](https://github.com/user-attachments/assets/0388792b-778e-412d-8357-2360336bbeb7)
+![grafik](https://github.com/user-attachments/assets/808069cb-9c76-43e5-b2ec-af1663b32acb)
 
 
 echo "[*] build by ely sylvain schybol"
