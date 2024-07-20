@@ -69,27 +69,6 @@ echo "
 
 "
 
-if [[ "$*" == *"--install"* ]];then
-  echo $'[*] The script does potentially make changes to your system by installing required software.\n[*]Do you want to continue? (Y/n)'
-  read answer
-  if [[ "$answer" == "y" || -z $answer ]];then
-    echo "[*] starting software installation..."
-    sudo apt install nmap gobuster dirsearch nikto smbclient wget -y
-    sudo snap install enum4linux
-
-    # installing SecList
-    if [[ ! -d /usr/share/wordlists/SecList ]];then
-      [[ -d /usr/share/wordlists ]] && : || (mkdir /usr/share/wordlists/) # check if wordlists is present and if not create it 
-      sudo wget -c https://github.com/danielmiessler/SecLists/archive/master.zip -O /usr/share/wordlists/SecList.zip \
-        && sudo unzip /usr/share/wordlists/SecList.zip \
-        && sudo rm -f /usr/share/wordlists/SecList.zip
-      echo "[*] required software was installed successfully"
-      exit 0;
-    fi
-  fi
-  exit 1;
-fi
-
 # {Error Handling}
 if [[ $# < 2 || "$1" =~ "--" ]];then
 	echo $'[*] Please provide a flag and an IP adresse/domain to enjoy the features...\n[*] ./infogat.sh 10.11.12.13 --<flag1> --<flag2>\n[*] Flags: [--help, --basic, --smb, --ftp]'
@@ -100,8 +79,14 @@ fi
 # check if a reporting folder exists and creating one if it doesn't
 [[ ! -d ./reports ]] && mkdir ./reports || :
 
+# check if commands are missing and install them if they do
+#if ! command -v <the_command>  > /dev/null
+#then
+#    echo "<the_command> could not be found"
+#    exit 1
+#fi
 
-# {main} functionalities
+# main functionalities
 if [[ "$*" == *"--basic"* ]];then
 	echo "[*] starting port scanning..."
 	sudo nmap $1 -p- -oN "./reports/$1_basicScan"  
@@ -123,15 +108,34 @@ fi
 
 if [[ "$*" == *"--ftp"* ]];then
   echo "[*] starting ftp enumeration..."
-  echo $1
-  sudo nmap --script "ftp-* and not brute" $1 --min-rate 5000 -oN "./reports/$1_ftpScans"
+  sudo nmap --scipt "ftp" $1 --min-rate 5000 "./reports/$1_ftpScans"
 fi
 
 if [[ "$*" == *"--smb"* ]];then
   echo "[*] starting smb enumeration..."
-  sudo nmap --script "smb-*" $1 --min-rate 5000 -oN "./reports/$1_smbNmapScans"
-  enum4linux -a $1 > "./reports/$1_smb4Linux"
-  smbclient \\\\$1\\ -L > "./reports/$1_smbClientShares"
+  sudo nmap --scipt "smb-vuln*" $1 --min-rate 5000 -oN "./reports/$1_smbNmapScans"
+  enum4linux -a $1 | tee "./reports/$1_smb4Linux"
+  smbclient \\\\$1\\ -L | tee "./reports/$1_smbClientShares"
+fi
+
+#<tba> --install --help
+if [[ "$*" == *"--install"* ]];then
+  echo $'[*] The script does potentially make changes to your system by installing required software.\nDo you want to continue?y/n'
+  read answer
+  if [[ -z $answer || $answer == "y" ]]
+    echo "[*] starting software installation..."
+    sudo apt install nmap gobuster dirsearch nikto smbclient wget -y
+    sudo snap install enum4linux -y
+
+    # installing SecList
+    if [[ ! -d /usr/share/wordlists/SecList ]]
+      [[ -d /usr/share/wordlists ]] && : || mkdir /usr/share/wordlists # check if wordlists is present and if not create it 
+      sudo wget -c https://github.com/danielmiessler/SecLists/archive/master.zip -O /usr/share/wordlists/SecList.zip \
+        && sudo unzip /usr/share/wordlists/SecList.zip \
+        && sudo rm -f /usr/share/wordlists/SecList.zip
+      echo "[*] required software was installed successfully"
+    fi
+    exit 0;
 fi
 
 
