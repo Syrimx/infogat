@@ -68,8 +68,8 @@ sudo ./infogat.sh 10.10.10.74  --basic # example
   * vulnerability scanning
 
 ## To Do
-- [] --install function
+- [x] --install function
 - [] --help function
-- [] --ftp function
-- [] --smb function
+- [x] --ftp function
+- [x] --smb function
 - ... 
