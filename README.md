@@ -69,7 +69,10 @@ sudo ./infogat.sh 10.10.10.74  --basic # example
 
 ## To Do
 - [x] --install function
-- [] --help function
+- [ ] --help function
 - [x] --ftp function
 - [x] --smb function
+- [ ] multiIP support
+- [ ] webdav support
+- [ ] (evaluating script reports for potential vulnerabilities) ?
 - ... 
