@@ -79,12 +79,6 @@ fi
 # check if a reporting folder exists and creating one if it doesn't
 [[ ! -d ./reports ]] && mkdir ./reports || :
 
-# check if commands are missing and install them if they do
-#if ! command -v <the_command>  > /dev/null
-#then
-#    echo "<the_command> could not be found"
-#    exit 1
-#fi
 
 # main functionalities
 if [[ "$*" == *"--basic"* ]];then
