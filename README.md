@@ -75,4 +75,5 @@ sudo ./infogat.sh 10.10.10.74  --basic # example
 - [ ] multiIP support
 - [ ] webdav support
 - [ ] (evaluating script reports for potential vulnerabilities) ?
+- [ ] stdin support 
 - ... 
