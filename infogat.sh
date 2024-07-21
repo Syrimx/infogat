@@ -122,7 +122,7 @@ if [[ "$*" == *"--install"* ]];then
     sudo snap install enum4linux -y
 
     # installing SecList
-    if [[ ! -d /usr/share/wordlists/SecList ]]
+    if [[ ! -d /usr/share/wordlists/SecList ]];then
       [[ -d /usr/share/wordlists ]] && : || mkdir /usr/share/wordlists # check if wordlists is present and if not create it 
       sudo wget -c https://github.com/danielmiessler/SecLists/archive/master.zip -O /usr/share/wordlists/SecList.zip \
         && sudo unzip /usr/share/wordlists/SecList.zip \
