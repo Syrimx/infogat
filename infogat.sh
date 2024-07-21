@@ -83,8 +83,8 @@ fi
 # main functionalities
 if [[ "$*" == *"--basic"* ]];then
 	echo "[*] starting port scanning..."
-	sudo nmap $1 -p- -oN "./reports/$1_basicScan"  
-	sudo nmap $1 -sC -sV -p- --min-rate 5000 -oN "./reports/$1_advancedScan"  
+	sudo nmap $1 -p- -Pn -oN "./reports/$1_basicScan"  
+	sudo nmap $1 -sC -sV -p- --min-rate 5000 -Pn -oN "./reports/$1_advancedScan" 
 
 	if [[ $(curl -s $1) ]];then
 		echo "[*] starting directory fuzzing..."
@@ -96,18 +96,18 @@ if [[ "$*" == *"--basic"* ]];then
 	fi
 
 	echo "[*] starting vulnerability scanning..."
-	nikto -h $1 > "./reports/$1_niktoVuln"  
-	sudo nmap --script "vuln" $1 -oN "./reports/$1_nmapVuln"  
+	[[ $(curl -s $1) ]] && : || nikto -h $1 > "./reports/$1_niktoVuln"  
+	sudo nmap --script "vuln" $1 -Pn -oN "./reports/$1_nmapVuln"  
 fi
 
 if [[ "$*" == *"--ftp"* ]];then
   echo "[*] starting ftp enumeration..."
-  sudo nmap --scipt "ftp" $1 --min-rate 5000 "./reports/$1_ftpScans"
+  sudo nmap --script "ftp" $1 -Pn --min-rate 5000 "./reports/$1_ftpScans"
 fi
 
 if [[ "$*" == *"--smb"* ]];then
   echo "[*] starting smb enumeration..."
-  sudo nmap --scipt "smb-vuln*" $1 --min-rate 5000 -oN "./reports/$1_smbNmapScans"
+  sudo nmap --script "smb-vuln*" $1 -Pn --min-rate 5000 -oN "./reports/$1_smbNmapScans"
   enum4linux -a $1 | tee "./reports/$1_smb4Linux"
   smbclient \\\\$1\\ -L | tee "./reports/$1_smbClientShares"
 fi
@@ -116,7 +116,7 @@ fi
 if [[ "$*" == *"--install"* ]];then
   echo $'[*] The script does potentially make changes to your system by installing required software.\nDo you want to continue?y/n'
   read answer
-  if [[ -z $answer || $answer == "y" ]]
+  if [[ -z $answer || $answer == "y" ]];then
     echo "[*] starting software installation..."
     sudo apt install nmap gobuster dirsearch nikto smbclient wget -y
     sudo snap install enum4linux -y
@@ -128,8 +128,9 @@ if [[ "$*" == *"--install"* ]];then
         && sudo unzip /usr/share/wordlists/SecList.zip \
         && sudo rm -f /usr/share/wordlists/SecList.zip
       echo "[*] required software was installed successfully"
+      exit 0;
     fi
-    exit 0;
+  fi
 fi
 
 

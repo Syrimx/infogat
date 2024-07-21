@@ -1,0 +1,2 @@
+# Nmap 7.80 scan initiated Sun Jul 21 22:57:25 2024 as: nmap -p- -oN ./reports/10.10.10.74_basicScan 10.10.10.74
+# Nmap done at Sun Jul 21 22:57:28 2024 -- 1 IP address (0 hosts up) scanned in 3.11 seconds
