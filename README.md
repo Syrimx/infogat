@@ -66,6 +66,11 @@ sudo ./infogat.sh 10.10.10.74  --basic # example
   * directory fuzzing
   * subdomain enumeration
   * vulnerability scanning
+--ftp
+  * nmap ftp scans
+--smb
+  * enumlinux
+  * nmap smb (vuln) scans
 
 ## To Do
 - [x] --install function
@@ -75,5 +80,6 @@ sudo ./infogat.sh 10.10.10.74  --basic # example
 - [ ] multiIP support
 - [ ] webdav support
 - [ ] (evaluating script reports for potential vulnerabilities) ?
-- [ ] stdin support 
+- [ ] stdin support
+- [ ] remote host connection test
 - ... 
