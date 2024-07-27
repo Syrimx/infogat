@@ -3,6 +3,15 @@
 # maybe implement caching features
 # maybe implement report export functionality
 
+
+
+# check if the script is running as root
+if [[ $(/usr/bin/id -u) -ne 0 ]]; then
+    echo "[*] Not running as root... this script requires root privileges -> sudo infogat <ip> --basic"
+    exit 1;
+fi
+
+
 # {Eye Candy}
 echo "
    _      ___               __ 
@@ -64,9 +73,6 @@ echo "
                ...%++*%%%%#=.....%===+++++++++++%+++++++++++===%.....+%%%%#*++%..              
                  .......       .#####%%%%%%#+:.....:*%%%%%%%###%:.      .........              
                                ...........             ...........                             
-
-
-
 "
 
 # {Error Handling}
@@ -80,36 +86,41 @@ fi
 [[ ! -d ./reports ]] && mkdir ./reports || :
 
 
+# check if remote host is reachable
+# <tba>
+
+
 # main functionalities
 if [[ "$*" == *"--basic"* ]];then
 	echo "[*] starting port scanning..."
-	sudo nmap $1 -p- -Pn -oN "./reports/$1_basicScan"  
-	sudo nmap $1 -sC -sV -p- --min-rate 5000 -Pn -oN "./reports/$1_advancedScan" 
+	sudo nmap $1 -p- -Pn -oN "$(pwd)/reports/$1_basicScan"  
+	sudo nmap $1 -sC -sV -p- --min-rate 5000 -Pn -oN "$(pwd)/reports/$1_advancedScan" 
 
-	if [[ $(curl -s $1) ]];then
+	if [[ $(curl -s --head  --request GET $1) ]];then
 		echo "[*] starting directory fuzzing..."
-		gobuster dir -w /usr/share/wordlists/SecLists/Discovery/Web-Content/directory-list-2.3-medium.txt -u $1 -o "./reports/$1_dirGoFuzz" -b 404,503,500  
-		dirsearch -u $1 -o "./reports/$1_dirSearchFuzz" -x 500,503,404  
+    [[ ! -d "$(pwd)/reports/$1_dirSearchFuzz" ]] && sudo touch "$(pwd)/reports/$1_dirSearchFuzz" || :
+    # ffuf -u "$1/FUZZ" -w /usr/share/wordlists/SecList/Discovery/Web-Content/directory-list-2.3-medium.txt -c -o "$(pwd)/reports/$1_fuffDirFuzz"
+    dirsearch -u $1 -x 500,503,404 -e php,aspx,jsp,html,js,txt --deep-recursive --random-agent -q -o "$(pwd)/reports/$1_dirSearchFuzz"
 
 		echo "[*] starting subdomain enumeration..."
-		gobuster dns -w /usr/share/wordlists/SecLists/DNS/subdomains-top1million-110000.txt -d $1 -o "./reports/$1_subList"  
+    # ffuf -u "FUZZ/$1" -w /usr/share/wordlists/SecLists/DNS/subdomains-top1million-110000.txt -o "$(pwd)/reports/$1_subList"  
 	fi
 
 	echo "[*] starting vulnerability scanning..."
-	[[ $(curl -s $1) ]] && : || nikto -h $1 > "./reports/$1_niktoVuln"  
-	sudo nmap --script "vuln" $1 -Pn -oN "./reports/$1_nmapVuln"  
+	[[ $(curl -s --head  --request GET $1) ]] && nikto -h $1 > "$(pwd)/reports/$1_niktoVuln" || :
+	sudo nmap --script "vuln" $1 -Pn -oN "$(pwd)/reports/$1_nmapVuln"  
 fi
 
 if [[ "$*" == *"--ftp"* ]];then
   echo "[*] starting ftp enumeration..."
-  sudo nmap --script "ftp" $1 -Pn --min-rate 5000 "./reports/$1_ftpScans"
+  sudo nmap --script "ftp" $1 -Pn --min-rate 5000 "$(pwd)/reports/$1_ftpScans"
 fi
 
 if [[ "$*" == *"--smb"* ]];then
   echo "[*] starting smb enumeration..."
-  sudo nmap --script "smb-vuln*" $1 -Pn --min-rate 5000 -oN "./reports/$1_smbNmapScans"
-  enum4linux -a $1 | tee "./reports/$1_smb4Linux"
-  smbclient \\\\$1\\ -L | tee "./reports/$1_smbClientShares"
+  sudo nmap --script "smb-vuln*" $1 -Pn --min-rate 5000 -oN "$(pwd)/reports/$1_smbNmapScans"
+  enum4linux -a $1 | tee "$(pwd)/reports/$1_smb4Linux"
+  smbclient \\\\$1\\ -L | tee "$(pwd)/reports/$1_smbClientShares"
 fi
 
 #<tba> --install --help
@@ -118,7 +129,7 @@ if [[ "$*" == *"--install"* ]];then
   read answer
   if [[ -z $answer || $answer == "y" ]];then
     echo "[*] starting software installation..."
-    sudo apt install nmap gobuster dirsearch nikto smbclient wget -y
+    sudo apt install nmap gobuster dirsearch nikto smbclient wget ffuf -y
     sudo snap install enum4linux -y
 
     # installing SecList
