@@ -77,6 +77,7 @@ sudo ./infogat.sh 10.10.10.74  --basic # example
 - [ ] --help function
 - [x] --ftp function
 - [x] --smb function
+- [ ] implement cashing functionality
 - [ ] multiIP support
 - [ ] webdav support
 - [ ] (evaluating script reports for potential vulnerabilities) ?
