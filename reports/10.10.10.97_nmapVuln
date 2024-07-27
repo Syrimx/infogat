@@ -1,0 +1,36 @@
+# Nmap 7.80 scan initiated Sat Jul 27 23:15:03 2024 as: nmap --script vuln -Pn -oN ./reports/10.10.10.97_nmapVuln 10.10.10.97
+Pre-scan script results:
+| broadcast-avahi-dos: 
+|   Discovered hosts:
+|     224.0.0.251
+|   After NULL UDP avahi packet DoS (CVE-2011-1002).
+|_  Hosts are all up (not vulnerable).
+Nmap scan report for 10.10.10.97
+Host is up (0.045s latency).
+Not shown: 998 filtered ports
+PORT    STATE SERVICE
+80/tcp  open  http
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+|_http-csrf: Couldn't find any CSRF vulnerabilities.
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+| http-enum: 
+|_  /login.php: Possible admin folder
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+445/tcp open  microsoft-ds
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+|_smb-vuln-webexec: ERROR: Script execution failed (use -d to debug)
+
+Host script results:
+|_samba-vuln-cve-2012-1182: ERROR: Script execution failed (use -d to debug)
+|_smb-double-pulsar-backdoor: ERROR: Script execution failed (use -d to debug)
+|_smb-vuln-conficker: ERROR: Script execution failed (use -d to debug)
+|_smb-vuln-cve-2017-7494: ERROR: Script execution failed (use -d to debug)
+|_smb-vuln-ms06-025: ERROR: Script execution failed (use -d to debug)
+|_smb-vuln-ms07-029: ERROR: Script execution failed (use -d to debug)
+|_smb-vuln-ms08-067: ERROR: Script execution failed (use -d to debug)
+|_smb-vuln-ms10-054: false
+|_smb-vuln-ms10-061: ERROR: Script execution failed (use -d to debug)
+|_smb-vuln-ms17-010: ERROR: Script execution failed (use -d to debug)
+|_smb-vuln-regsvc-dos: ERROR: Script execution failed (use -d to debug)
+
+# Nmap done at Sat Jul 27 23:20:06 2024 -- 1 IP address (1 host up) scanned in 302.45 seconds

@@ -1,0 +1,9 @@
+# Dirsearch started Sun Jul 28 00:07:47 2024 as: dirsearch.py -u 10.10.10.97 -x 500,503,404 -e php,aspx,jsp,html,js,txt --deep-recursive --random-agent -q -o /home/ely/Dokumente/coding/infogat/reports/reports/10.10.10.97_dirSearchFuzz
+
+403   312B   http://10.10.10.97:80/%2e%2e//google.com
+403   312B   http://10.10.10.97:80/\..\..\..\..\..\..\..\..\..\etc\passwd
+302     0B   http://10.10.10.97:80/contact.php    -> REDIRECTS TO: login.php
+302     0B   http://10.10.10.97:80/home.php    -> REDIRECTS TO: login.php
+200     1KB  http://10.10.10.97:80/login.php
+302     0B   http://10.10.10.97:80/logout.php    -> REDIRECTS TO: login.php
+200     2KB  http://10.10.10.97:80/register.php

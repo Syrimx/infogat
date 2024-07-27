@@ -1,0 +1,10 @@
+# Nmap 7.80 scan initiated Sat Jul 27 23:11:39 2024 as: nmap -p- -Pn -oN ./reports/10.10.10.97_basicScan 10.10.10.97
+Nmap scan report for 10.10.10.97
+Host is up (0.032s latency).
+Not shown: 65532 filtered ports
+PORT     STATE SERVICE
+80/tcp   open  http
+445/tcp  open  microsoft-ds
+8808/tcp open  ssports-bcast
+
+# Nmap done at Sat Jul 27 23:13:25 2024 -- 1 IP address (1 host up) scanned in 105.32 seconds
