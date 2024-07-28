@@ -98,12 +98,12 @@ if [[ "$*" == *"--basic"* ]];then
 
 	if [[ $(curl -s --head  --request GET $1) ]];then
 		echo "[*] starting directory fuzzing..."
-    [[ ! -d "$(pwd)/reports/$1_dirSearchFuzz" ]] && sudo touch "$(pwd)/reports/$1_dirSearchFuzz" || :
+    [[ ! -d "$(pwd)/reports/$1_dirSearchFuzz" ]] && sudo touch "$(pwd)/reports/$1_dirSearchFuzz"; sudo touch "$(pwd)/reports/$1_dirSearchFuzz2" || :
     # ffuf -u "$1/FUZZ" -w /usr/share/wordlists/SecList/Discovery/Web-Content/directory-list-2.3-medium.txt -c -o "$(pwd)/reports/$1_fuffDirFuzz"
-    dirsearch -u $1 -x 500,503,404 -e php,aspx,jsp,html,js,txt --deep-recursive --random-agent -q -o "$(pwd)/reports/$1_dirSearchFuzz"
-
+    dirsearch -t 50 -u $1 -x 500,503,404 -e php,aspx,jsp,html,js,txt --deep-recursive --random-agent -q -o "$(pwd)/reports/$1_dirSearchFuzz"
+    dirsearch -t 50 -u $1 -x 500,503,404 -e php,aspx,jsp,html,js,txt --deep-recursive --random-agent -q -w /usr/share/wordlists/SecList/Discovery/Web-Content/directory-list-2.3-medium.txt -o "$(pwd)/reports/$1_dirSearchFuzz2" 
 		# echo "[*] starting subdomain enumeration..."
-    # ffuf -u "FUZZ/$1" -w /usr/share/wordlists/SecLists/DNS/subdomains-top1million-110000.txt -o "$(pwd)/reports/$1_subList"  
+    # ffuf -w /usr/share/wordlists/SecList/Discovery/DNS/subdomains-top1million-110000.txt -H "Host: FUZZ.$1" -u $1
 	fi
 
 	echo "[*] starting vulnerability scanning..."
