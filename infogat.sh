@@ -102,7 +102,7 @@ if [[ "$*" == *"--basic"* ]];then
     # ffuf -u "$1/FUZZ" -w /usr/share/wordlists/SecList/Discovery/Web-Content/directory-list-2.3-medium.txt -c -o "$(pwd)/reports/$1_fuffDirFuzz"
     dirsearch -u $1 -x 500,503,404 -e php,aspx,jsp,html,js,txt --deep-recursive --random-agent -q -o "$(pwd)/reports/$1_dirSearchFuzz"
 
-		echo "[*] starting subdomain enumeration..."
+		# echo "[*] starting subdomain enumeration..."
     # ffuf -u "FUZZ/$1" -w /usr/share/wordlists/SecLists/DNS/subdomains-top1million-110000.txt -o "$(pwd)/reports/$1_subList"  
 	fi
 
@@ -118,9 +118,8 @@ fi
 
 if [[ "$*" == *"--smb"* ]];then
   echo "[*] starting smb enumeration..."
-  sudo nmap --script "smb-vuln*" $1 -Pn --min-rate 5000 -oN "$(pwd)/reports/$1_smbNmapScans"
+  sudo nmap -p 139,445 --script smb-vuln* $1 -Pn -oN "$(pwd)/reports/$1_smbNmapScans"
   enum4linux -a $1 | tee "$(pwd)/reports/$1_smb4Linux"
-  smbclient \\\\$1\\ -L | tee "$(pwd)/reports/$1_smbClientShares"
 fi
 
 #<tba> --install --help
