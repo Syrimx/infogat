@@ -94,7 +94,8 @@ fi
 if [[ "$*" == *"--basic"* ]];then
 	echo "[*] starting port scanning..."
 	sudo nmap $1 -p- -Pn -oN "$(pwd)/reports/$1_basicScan"  
-	sudo nmap $1 -sC -sV -p- --min-rate 5000 -Pn -oN "$(pwd)/reports/$1_advancedScan" 
+	sudo nmap $1 -sC -sV -p- --min-rate 5000 -Pn -oN "$(pwd)/reports/$1_advancedScan"
+  sudo nmap $1 -sU -T5 "$(pwd)/reports/$1_UDPScan"
 
 	if [[ $(curl -s --head  --request GET $1) ]];then
 		echo "[*] starting directory fuzzing..."
@@ -120,6 +121,7 @@ if [[ "$*" == *"--smb"* ]];then
   echo "[*] starting smb enumeration..."
   sudo nmap -p 139,445 --script smb-vuln* $1 -Pn -oN "$(pwd)/reports/$1_smbNmapScans"
   enum4linux -a $1 | tee "$(pwd)/reports/$1_smb4Linux"
+  smbclient -L \\\\$1\\ -N | tee "$(pwd)/reports/$1_smbClient"
 fi
 
 #<tba> --install --help
